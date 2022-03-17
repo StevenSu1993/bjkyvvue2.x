@@ -1,17 +1,21 @@
 <template>
 
   <div class="hello" style="height:100%;width:100%;">
-    <v-chart :options="option" ></v-chart>
+    <v-chart :options="option"></v-chart>
+    <h1> {{message1}}</h1>
+    <h1>{{ message }}</h1>
   </div>
 
 </template>
 
 <script>
+import request from '@/utils/request'
+
 export default {
-  name: "AddMenu",
-  data() {
+  name: 'AddMenu',
+  data () {
     return {
-      option :{
+      option: {
         xAxis: {
           type: 'category',
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -26,11 +30,23 @@ export default {
             smooth: true
           }
         ]
-      }
-
+      },
+      message: '',
+      message1: ""
     }
   },
-  mounted() {
+  methods: {
+    async init () {
+     await request.get('api/hello').then(res => {
+        this.message = res.data
+      })
+    }
+  },
+  mounted () {
+  },
+  created () {
+    this.message1 ? this.message1 = this.message1 : this.message1 = "test"
+    this.init()
   }
 }
 </script>

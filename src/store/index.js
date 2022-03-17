@@ -58,7 +58,7 @@ export default new Vuex.Store({
       state.logging = value
     },
     setMenu(state, allMenu) {
-      state.newRoutes = getNewRouters(allMenu)
+      // state.newRoutes = getNewRouters(allMenu)
       state.allMenu = allMenu;
     }
 

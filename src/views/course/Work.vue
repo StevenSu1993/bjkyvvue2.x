@@ -15,7 +15,7 @@
     <el-row style="padding: 20px">
       <el-button type="primary" plain @click="newCourse">新建课程</el-button>
       <el-button plain @click="batchAddManager">批量添加课程管理员</el-button>
-      <el-button type="text" plain >课程总数 : {{coureTotal}}</el-button>
+      <el-button type="text" style="border:none" plain>课程总数 : {{ coureTotal }}</el-button>
     </el-row>
 
     <!-- 搜索筛选 -->
@@ -29,8 +29,8 @@
     </el-form>
 
     <!--    数据展示列表-->
-    <el-table :data="tableData">
-      <el-table-column prop="courseName" label="课程名称" width="140">
+    <el-table :data="tableData" stripe v-show="show">
+      <el-table-column prop="name" label="课程名称" width="140">
       </el-table-column>
       <el-table-column prop="countPratice" label="作业主题数" width="140">
       </el-table-column>
@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column prop="countSubmit" label="作业提交数" width="140">
       </el-table-column>
-      <el-table-column prop="userName" label="创建人" width="140">
+      <el-table-column prop="creator" label="创建人" width="140">
       </el-table-column>
 
       <el-table-column align="center" label="操作" min-width="300">
@@ -59,26 +59,32 @@
 
 <script>
 
-import Pagination from "../../components/Pagination"
-
+import Pagination from '../../components/Pagination'
 
 export default {
-  name: "Work",
+  name: 'Work',
   components: {
     Pagination
   },
-  data() {
+  data () {
     const item = {
       courseName: '口语纠音课',
       countPratice: 14,
       countUser: 12,
       countSubmit: 130,
-      userName: "steven"
-    };
+      userName: 'steven'
+    }
 
     return {
-      coureTotal : 12,
-      //分页查询的
+      show: true,
+      coureTotal: 0,
+      tableData: [],
+      // 分页参数
+      pageparm: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 10
+      },
       formInline: {
         page: 1,
         limit: 10,
@@ -87,43 +93,93 @@ export default {
         varName: '',
         token: localStorage.getItem('logintoken')
       },
-      tableData: Array(10).fill(item),
-      // 分页参数
-      pageparm: {
-        currentPage: 1,
-        pageSize: 10,
-        total: 10
-      }
-
+      // tableData: Array(10).fill(item),
     }
 
   },
 
   methods: {
-    getdata(parameter) {
-      alert(parameter.courseName)
+    getdata: async function (parameter) {
       //根据courseName 去查询数据
-      alert("调用搜索方法后端。利用axios 请求数据，进行渲染")
+      // alert('调用搜索方法后端。利用axios 请求数据，进行渲染', parameter)
+      return await this.$request.get('api/auth/getAllCourse', {
+        params: parameter
+      }).then(res => {
+        console.log('getData', res)
+        return res
+      })
 
     },
-    search() {
-      this.getdata(this.formInline)
+    search () {
+      console.log('根据名字去模糊查询', this.formInline.courseName)
+      let params = {
+        start: 0,
+        size: 10,
+        name: this.formInline.courseName
+      }
+      this.getdata(params).then(res => {
+        console.log('测试search', res)
+        this.tableData = res.data.data.records
+      })
+
+      this.$request.get('api/auth/getCountCourseByName', { params: { name: this.formInline.courseName } }).then(res => {
+        console.log(res.data.data)
+        this.pageparm.total = res.data.data
+      })
+
     },
     // 分页插件事件
-    callFather(parm) {
+    async callFather (parm) {
+
+      alert('去后台查询数据\'')
+      console.log('parm的值为', parm)
       this.formInline.page = parm.currentPage
       this.formInline.limit = parm.pageSize
+
+      let params = {
+        start: parm.currentPage,
+        size: parm.pageSize
+      }
+      if (this.formInline.courseName != null) {
+        params.name = this.formInline.courseName
+      }
       //TODO去后端获取数据
-    },
-    newCourse (){
+      this.show = false
+      await this.$request.get('api/auth/getAllCourse', { params: params }).then(res => {
+        console.log(res)
+        this.show = true
+        this.tableData = res.data.data.records
+      })
 
-      this.$router.push("/createCourse")
-      alert("新建一个课程")
+    },
+    newCourse () {
+
+      this.$router.push('/createCourse')
+      alert('新建一个课程')
 
     },
-    batchAddManager(){
-      alert("批量添加管理员")
+    batchAddManager () {
+      alert('批量添加管理员')
     },
+    init () {
+      console.log('this is work init')
+      let data = this.getdata({
+        start: 0,
+        size: 10
+      }).then(res => {
+        this.tableData = res.data.data.records
+      })
+
+      this.$request.get('api/auth/getCountCourse').then(res => {
+        console.log(res.data.data)
+        this.coureTotal = res.data.data
+        this.pageparm.total = this.coureTotal
+      })
+    }
+  },
+  created () {
+
+    this.init()
 
   }
 }

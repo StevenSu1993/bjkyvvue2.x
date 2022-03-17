@@ -40,7 +40,7 @@
               </div>
             </div>
             <div class="content">
-              <el-progress type="dashboard" :percentage="parseFloat(data.cpu.used)"/>
+              <el-progress type="dashboard" v-if="show"  :percentage="parseFloat(data.cpu.used)"/>
             </div>
           </el-tooltip>
           <div class="footer">{{ data.cpu.coreNumber }} 核心</div>
@@ -60,7 +60,7 @@
               </div>
             </div>
             <div class="content">
-              <el-progress type="dashboard" :percentage="parseFloat(data.memory.usageRate)"/>
+              <el-progress type="dashboard" v-if="show"  :percentage="parseFloat(data.memory.usageRate)"/>
             </div>
           </el-tooltip>
           <div class="footer">{{ data.memory.used }} / {{ data.memory.total }}</div>
@@ -80,7 +80,7 @@
               </div>
             </div>
             <div class="content">
-              <el-progress type="dashboard" :percentage="parseFloat(data.swap.usageRate)"/>
+              <el-progress type="dashboard"  v-if="show"  :percentage="parseFloat(data.swap.usageRate)"/>
             </div>
           </el-tooltip>
           <div class="footer">{{ data.swap.used }} / {{ data.swap.total }}</div>
@@ -98,7 +98,7 @@
                 </div>
               </div>
               <div class="content">
-                <el-progress type="dashboard" :percentage="parseFloat(data.disk.usageRate)"/>
+                <el-progress type="dashboard"  :percentage="data.disk.usageRate ?parseFloat(data.disk.usageRate) : 0"/>
               </div>
             </el-tooltip>
           </div>
@@ -142,46 +142,46 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/component/polar'
 
 export default {
-  name: "Monitor",
+  name: 'Monitor',
   components: {
     'v-chart': ECharts
   },
-  data() {
+  data () {
     return {
       show: false,
       url: 'api/monitor',
-      data: {},
-      // data: {
-      //   sys: {
-      //     os: "2324",
-      //     ip: "sfd",
-      //     day: "sfds"
-      //
-      //   },
-      //   disk: {
-      //     available: '',
-      //     total: '',
-      //     used: ''
-      //   },
-      //   swap: {
-      //     usageRate: " ",
-      //     used: '',
-      //     total: '',
-      //   },
-      //   cpu: {
-      //     name: '',
-      //     package: '',
-      //     core: '',
-      //     logic: '',
-      //     coreNumber: '',
-      //     used: ""
-      //   },
-      //   memory: {
-      //     total: '',
-      //     used: '',
-      //   }
-      //
-      // },
+      // data: {},
+      data: {
+        sys: {
+          os: '',
+          ip: '',
+          day: ''
+        },
+        disk: {
+          available: '',
+          total: '',
+          used: '',
+          usageRate:''
+        },
+        swap: {
+          usageRate: ' ',
+          used: '',
+          total: '',
+        },
+        cpu: {
+          name: '',
+          package: '',
+          core: '',
+          logic: '',
+          coreNumber: '',
+          used: ''
+        },
+        memory: {
+          total: '',
+          usageRate:'',
+          used: '',
+        }
+      },
       cpuInfo: {
         tooltip: {
           trigger: 'axis'
@@ -251,7 +251,7 @@ export default {
     }
   },
 
-  created() {
+  created () {
     this.init()
     this.monitor = window.setInterval(() => {
       setTimeout(() => {
@@ -260,9 +260,9 @@ export default {
     }, 3500)
   },
   methods: {
-    init() {
+    async init () {
 
-      this.$request.get(this.url).then(data => {
+      await this.$request.get(this.url).then(data => {
         // console.log(data.data)
         this.show = true
         this.data = data.data.data
@@ -280,7 +280,7 @@ export default {
       })
     }
   },
-  destroyed() {
+  destroyed () {
     clearInterval(this.monitor)
   }
 
