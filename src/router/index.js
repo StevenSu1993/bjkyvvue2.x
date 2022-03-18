@@ -81,14 +81,16 @@ router.beforeEach(async (to, from, next) => {
         getRoutes(allmenu)
       })
     }
-    if (to.name == 'login') {
+    console.log("去访问后端以后生成的路由", router.options.routes)
+    if (to.path == '/login') {
       next('/index')
     } else {
       next()
     }
-  } else if (to.name !== 'login') {
+  }
+ else if (to.path !== '/login') {
     //没有登录
-    next({ name: 'login' }) //如果不是登陆页面，重定向到登陆页面
+    next({ path: '/login' }) //如果不是登陆页面，重定向到登陆页面
   } else {
     next()
   } //如果是登陆页面，就直接放行

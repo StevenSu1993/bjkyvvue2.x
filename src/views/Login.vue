@@ -141,7 +141,10 @@ export default {
           // 另外一种写法 只有promise
           this.$store.dispatch("login", user).then(res => {
             console.log('登陆了,{}', res)
-            this.$router.push('/index')
+            this.$router.push('/index').catch(err => {
+              console.log(err)
+              this.$router.push('/index')
+            })
           }).catch(err => {
             this.loading = false
             console.log(err.response)

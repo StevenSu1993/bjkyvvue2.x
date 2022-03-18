@@ -45,6 +45,10 @@ export default {
   mounted () {
   },
   created () {
+
+    console.log("addMenu中查看route.path", this.$route.path)
+
+    console.log(this.$router.options.routes)
     this.message1 ? this.message1 = this.message1 : this.message1 = "test"
     this.init()
   }

@@ -7,13 +7,13 @@
       <div class="logobox">
         <img class="logoimg" src="../assets/img/logo.png" alt="">
       </div>
-      <el-submenu class="item" v-for="menu in allmenu" :key="menu.id" :index="menu.name+ ''">
+      <el-submenu class="item" v-for="menu in allmenu" :key="menu.id" :index="menu.name">
         <template slot="title">
           <i class="iconfont" :class="menu.icon"></i>
           <span>{{ menu.name }}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item v-for="chmenu in menu.childMenu" :index="chmenu.url + ''" :key="chmenu.id">
+          <el-menu-item v-for="chmenu in menu.childMenu" :index="chmenu.url"  :key="chmenu.id">
             <i class="iconfont" :class="chmenu.icon"></i>
             <span>{{ chmenu.name }}</span>
           </el-menu-item>
