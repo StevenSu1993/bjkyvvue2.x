@@ -15,12 +15,12 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: Login,
+    component: Login
   },
   {
     path: '/login',
     name: 'login',
-    component: Login,
+    component: Login
   },
 
   {
@@ -31,15 +31,15 @@ const routes = [
       {
         path: '/showStudentInfo',
         name: 'showStudentInfo',
-        component: ShowStudentInfo,
+        component: ShowStudentInfo
       },
       {
         path: '/createCourse',
         name: 'createCourse',
-        component: createWork,
-      },
+        component: createWork
+      }
     ]
-  },
+  }
 
 ]
 
@@ -50,12 +50,13 @@ const router = new Router({
 
 // 根据菜单动态生成路由
 function getRoutes (allmenu) {
-  //拿到系统配置好的所有的路由
-  let newRoutes = router.options.routes
+  // 拿到系统配置好的所有的路由
+  const newRoutes = router.options.routes
   allmenu.forEach(m => {
     if (m.childMenu.length > 0) {
       m.childMenu.forEach(cm => {
-        let r = allRoutes.find(elment => elment.name == cm.name)
+        // eslint-disable-next-line eqeqeq
+        const r = allRoutes.find(elment => elment.name === cm.name)
         if (r != null) {
           newRoutes[2].children.push(r)
         }
@@ -65,35 +66,34 @@ function getRoutes (allmenu) {
 
   router.addRoutes(newRoutes)
   return newRoutes
-
 }
 
-//假如用户A没有登录，访问了Login页面
+// 假如用户A没有登录，访问了Login页面
 router.beforeEach(async (to, from, next) => {
-  if (getToken() !== 'undefined' && getToken()) {//已登录
-    //登录成功以后去查看缓存中是否有menu数据， 没有就去跟服务器要
+  if (getToken() !== 'undefined' && getToken()) { // 已登录
+    // 登录成功以后去查看缓存中是否有menu数据， 没有就去跟服务器要
     if (!store.state.allMenu.length > 0) {
       await request.get('api/auth/getMenu').then(res => {
         // console.log(res.data.data)
-        let allmenu = res.data.data
-        //把菜单放到store中去，为了动态生成路由
+        const allmenu = res.data.data
+        // 把菜单放到store中去，为了动态生成路由
         store.dispatch('setRouteByMenu', allmenu)
         getRoutes(allmenu)
       })
     }
-    console.log("去访问后端以后生成的路由", router.options.routes)
-    if (to.path == '/login') {
+    // console.log("去访问后端以后生成的路由", router.options.routes)
+    // eslint-disable-next-line eqeqeq
+    if (to.path === '/login') {
       next('/index')
     } else {
       next()
     }
-  }
- else if (to.path !== '/login') {
-    //没有登录
-    next({ path: '/login' }) //如果不是登陆页面，重定向到登陆页面
+  } else if (to.path !== '/login') {
+    // 没有登录
+    next({ path: '/login' }) // 如果不是登陆页面，重定向到登陆页面
   } else {
     next()
-  } //如果是登陆页面，就直接放行
+  } // 如果是登陆页面，就直接放行
 })
 
 export default router

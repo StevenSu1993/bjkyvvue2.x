@@ -28,8 +28,8 @@
 <script>
 
 export default {
-  name: "Leftnav",
-  data() {
+  name: 'LeftNav',
+  data () {
     return {
       collapsed: false,
       allmenu: []
@@ -39,85 +39,14 @@ export default {
 
   },
   created: function () {
-    // 菜单栏的选项应该根据后台数据
-    let res = [
-      {
-        menuid: 1,
-        icon: 'li-icon-xiangmuguanli',
-        menuname: '课程管理',
-        hasThird: null,
-        url: null,
-        menus: [
-          {
-            menuid: 2,
-            icon: 'icon-cat-skuQuery',
-            menuname: '作业课程',
-            hasThird: 'N',
-            url: 'work',
-            menus: null
-          }
-        ]
-      },
-      {
-        menuid: 128,
-        icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-        menuname: '素材中心',
-        hasThird: null,
-        url: null,
-        menus: [
-          {
-            menuid: 129,
-            icon: 'icon-provider-manage',
-            menuname: '图文素材',
-            hasThird: 'N',
-            url: 'imageM',
-            menus: null
-          },
-          {
-            menuid: 175,
-            icon: 'icon-provider-manage',
-            menuname: '模板素材',
-            hasThird: 'N',
-            url: 'templateM',
-            menus: null
-          }
-        ]
-      },
-      {
-        menuid: 138,
-        icon: 'li-icon-shangchengxitongtubiaozitihuayuanwenjian91',
-        menuname: '系统学员',
-        hasThird: null,
-        url: null,
-        menus: [
-          {
-            menuid: 139,
-            icon: 'icon-provider-manage',
-            menuname: '学员总览',
-            hasThird: 'N',
-            url: 'student',
-            menus: null
-          },
-          {
-            menuid: 185,
-            icon: 'icon-provider-manage',
-            menuname: '班级管理',
-            hasThird: 'N',
-            url: 'classManage',
-            menus: null
-          }
-        ]
-      }
-
-    ]
     // this.allmenu = res;
     // 首先判断用户是否登录
-    this.allmenu =this.$store.state.allMenu
+    this.allmenu = this.$store.state.allMenu
 
-   /* console.log("在vuex中获取到的数据",this.allmenu)
-    console.log("vuex中的数据",this.$store.state.allMenu)*/
+    /* console.log("在vuex中获取到的数据",this.allmenu)
+    console.log("vuex中的数据",this.$store.state.allMenu) */
 
- /*   if (localStorage.getItem('jwt')) {
+    /*   if (localStorage.getItem('jwt')) {
       this.$request.get("api/auth/getMenu").then(res => {
         this.allmenu = res.data.data
         //把菜单放到store中去，为了动态生成路由
@@ -130,9 +59,9 @@ export default {
         message: '请登录后再来',
         type: 'warning'
       });
-    }*/
+    } */
     // root 访问得到的是根父组件
-    this.$root.$bus.$on('toggle', value => {
+    this.$bus.$on('toggle', value => {
       this.collapsed = !value
     })
   }

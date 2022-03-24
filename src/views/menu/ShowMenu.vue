@@ -35,7 +35,6 @@
           width="180">
       </el-table-column>
 
-
       <el-table-column
           prop="address"
           label="地址">
@@ -59,7 +58,6 @@
     </el-table>
 
     <div v-show="isUpdata">
-
 
     <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="活动名称" prop="name">
@@ -115,55 +113,55 @@
 
 <script>
 export default {
-  name: "ShowMenu",
-  data() {
+  name: 'ShowMenu',
+  data () {
     return {
-      ruleForm:[],
+      ruleForm: [],
       isUpdata: false,
       tableData: [
         {
           id: 1,
           date: '2016-05-02',
           name: '王小虎',
-          creater:'王小虎',
+          creater: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         },
         {
           id: 2,
           date: '2016-05-04',
           name: '王小虎',
-          creater:'王小虎',
+          creater: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄'
         },
         {
           id: 3,
           date: '2016-05-01',
           name: '王小虎',
-          creater:'王小虎',
+          creater: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄',
           children: [{
             id: 31,
             date: '2016-05-01',
             name: '王小虎',
-            creater:'王小虎',
+            creater: '王小虎',
             address: '上海市普陀区金沙江路 1519 弄'
           },
-            {
-              id: 32,
-              date: '2016-05-01',
-              name: '王小虎',
-              creater:'王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }]
+          {
+            id: 32,
+            date: '2016-05-01',
+            name: '王小虎',
+            creater: '王小虎',
+            address: '上海市普陀区金沙江路 1519 弄'
+          }]
         }]
 
     }
   },
   methods: {
-    handleEdit() {
-      this.isUpdata  =true
+    handleEdit () {
+      this.isUpdata = true
     },
-    handleDelete() {
+    handleDelete () {
     }
   }
 }

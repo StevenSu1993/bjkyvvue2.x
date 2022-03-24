@@ -75,9 +75,9 @@
 
 <script>
 export default {
-  name: "createWork",
+  name: 'createWork',
 
-  data() {
+  data () {
     return {
       ruleForm: {
         classes: [],
@@ -92,37 +92,37 @@ export default {
       },
       rules: {
         name: [
-          {required: true, message: '请输入课程名称', trigger: 'blur'},
-          {min: 1, max: 30, message: '长度在不吵过30个字符', trigger: 'blur'}
+          { required: true, message: '请输入课程名称', trigger: 'blur' },
+          { min: 1, max: 30, message: '长度在不吵过30个字符', trigger: 'blur' }
         ],
         region: [
-          {required: true, message: '请选择活动区域', trigger: 'change'}
+          { required: true, message: '请选择活动区域', trigger: 'change' }
         ],
         date1: [
-          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
+          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
         ],
         type: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
+          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
         ]
       }
-    };
+    }
   },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
-          this.$request.post("api/auth/createCourse", this.ruleForm).then(res => {
-            console.log("this is create course返回值 : {}", res.data)
+          alert('submit!')
+          this.$request.post('api/auth/createCourse', this.ruleForm).then(res => {
+            console.log('this is create course返回值 : {}', res.data)
           })
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     }
   }
 

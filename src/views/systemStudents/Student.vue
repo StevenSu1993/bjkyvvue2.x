@@ -1,7 +1,6 @@
 <template>
   <div>
 
-
     <!--  学员总览-->
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -12,7 +11,6 @@
         <el-button type="text" disabled>学员总览</el-button>
       </el-breadcrumb-item>
     </el-breadcrumb>
-
 
     <el-row :gutter="20">
       <el-col :span="2">
@@ -38,7 +36,6 @@
         </div>
       </el-col>
     </el-row>
-
 
     <el-menu default-active="1" class="el-menu-demo" mode="horizontal" @select="handleSelect">
 
@@ -82,50 +79,50 @@
 
 <script>
 export default {
-  name: "Student",
-  created() {
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Student',
+  created () {
     this.getAllUser()
   },
-  data() {
+  data () {
     return {
       tableData: [
         /* {
            studentName: 'sf',
            studentId: '2222',
            desc: "sfdsfdsfs"
-         }*/
-
+         } */
 
       ]
     }
   },
   methods: {
 
-    handleSelect() {
-      alert("去后台请求数据")
+    handleSelect () {
+      alert('去后台请求数据')
     },
-    exportExcel() {
-      //U引入easyexcel 进行数据的导出 后端完成
-      alert("后端使用easyExcel 框架进行实现")
+    exportExcel () {
+      // U引入easyexcel 进行数据的导出 后端完成
+      alert('后端使用easyExcel 框架进行实现')
     },
-    getAllUser() {
-      this.$request.get("api/auth/getAllUser", {params: {start: 0, size: 10}}).then(res => {
-        console.log("请求成功返回数据 ： {}", res.data)
+    getAllUser () {
+      this.$request.get('api/auth/getAllUser', { params: { start: 0, size: 10 } }).then(res => {
+        console.log('请求成功返回数据 ： {}', res.data)
         this.tableData = res.data.data.records
       })
     },
-    handShowInfo(row) {
-      console.log("this is row :{}", row)
+    handShowInfo (row) {
+      console.log('this is row :{}', row)
       this.$router.push({
-        path: "/showStudentInfo",
+        path: '/showStudentInfo',
         query: {
           row
         }
       })
     },
-    handleEdit() {
+    handleEdit () {
     }
-  },
+  }
 }
 </script>
 

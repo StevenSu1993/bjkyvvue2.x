@@ -3,7 +3,7 @@
 
 <script>
 export default {
-  name: "student"
+  name: 'student'
 }
 </script>
 

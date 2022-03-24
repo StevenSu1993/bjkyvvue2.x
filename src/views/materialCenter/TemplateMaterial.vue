@@ -17,7 +17,6 @@
       <el-button type="primary" plain @click="testeditor">模板创建完成</el-button>
     </el-row>
 
-
     <!--    <VueUEditor @ready = 'editorReady' ></VueUEditor>-->
     <!--    <VueUEditor></VueUEditor> -->
 
@@ -31,36 +30,35 @@
     <!--    <VueUeditorWrap></VueUeditorWrap>-->
   </div>
 
-
 </template>
 
 <script>
 
 import wangEditor from 'wangeditor'
 
-
 export default {
-  name: "TemplateMaterial",
+  name: 'TemplateMaterial',
   components: {
 
   },
-methods : {
-  newTemplate(){
+  methods: {
+    newTemplate () {
     // 创建新模板
+    },
+    testeditor () {
+      console.log(this.editor)
+      console.log(this.editor.txt.html())
+      alert('创建完成')
+    }
   },
-  testeditor (){
-    console.log(this.editor)
-    console.log(this.editor.txt.html())
-    alert("创建完成")
-  }
-},
-  mounted() {
+  mounted () {
     // const dom = document.getElementById('div1')
     // 两种写法都可以
     const dom = this.$refs.editor
+    // eslint-disable-next-line new-cap
     const editor = new wangEditor(dom)
     editor.config.uploadImgShowBase64 = true
-    editor.config.uploadVideoAccept = ['mp4','mp3']
+    editor.config.uploadVideoAccept = ['mp4', 'mp3']
     // editor.config.uploadFileName = 'your-custom-fileName'
     // 配置 server 接口地址
     editor.config.uploadVideoServer = '/api/upload-video'
@@ -68,12 +66,11 @@ methods : {
     console.log(editor)
     // 也能够动态的去往data 中添加数据跟小程序一样
     this.editor = editor
-
   },
-  data() {
+  data () {
     return {
     }
-  },
+  }
 
 }
 </script>

@@ -8,21 +8,20 @@
 </template>
 
 <script>
-import  E from 'wang-editor'
-import {Video1,Voice1} from "../../wangEditor/editorMenu.js"
+import E from 'wang-editor'
+import { Video1, Voice1 } from '../../wangEditor/editorMenu.js'
 export default {
-  name: "ImageMaterial",
-  mounted(){
-    const menuKeyVideo = "video"
-    const menuKeyVoice = "voice"
-    this.editor = new E("# editorBox")
+  name: 'ImageMaterial',
+  mounted () {
+    const menuKeyVideo = 'video'
+    const menuKeyVoice = 'voice'
+    this.editor = new E('# editorBox')
     // 全局注册自定义菜单video, voice
-    E.registerMenu(menuKeyVideo,Video1)
-    E.registerMenu(menuKeyVoice,Voice1)
+    E.registerMenu(menuKeyVideo, Video1)
+    E.registerMenu(menuKeyVoice, Voice1)
 
-    //创建编辑器
+    // 创建编辑器
     this.editor.create()
-
   }
 
 }

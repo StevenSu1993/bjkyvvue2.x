@@ -24,50 +24,49 @@
 <script>
 
 export default {
-  name: "Login111111",
+  name: 'Login111111',
 
-  data() {
+  data () {
     return {
       // Background: Background,
-      //定义loading默认为false
+      // 定义loading默认为false
       logining: false,
       // 记住密码
       rememberpwd: false,
       ruleForm: {
-        //username和password默认为空
+        // username和password默认为空
         name: 'zhangsan',
         password: 'zhangsan',
         code: ''
       },
-      //rules前端验证
+      // rules前端验证
       rules: {
-        name: [{required: true, message: '请输入账号', trigger: 'blur'}],
-        password: [{required: true, message: '请输入密码', trigger: 'blur'}]
+        name: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
     }
-
   },
 
   methods: {
-//获取info列表
-    submitForm(formName) {
+    // 获取info列表
+    submitForm (formName) {
       // 输入校验
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.logining = true
-          //去后台获取jwt
+          // 去后台获取jwt
           /*  await this.axios.get("api/hello").then(res => {
               console.log("houduan")
-            })*/
-          await this.axios.post("api/login", this.ruleForm)
-              .then(res => {
-                console.log('res=>', res.data);
-                this.logining = false
-                // JSON.stringify(res.data)
-                this.$store.commit('login',res.data.data);
-                // 登录成功后跳转到首页
-                this.$router.push({path: '/index'})
-              })
+            }) */
+          await this.axios.post('api/login', this.ruleForm)
+            .then(res => {
+              console.log('res=>', res.data)
+              this.logining = false
+              // JSON.stringify(res.data)
+              this.$store.commit('login', res.data.data)
+              // 登录成功后跳转到首页
+              this.$router.push({ path: '/index' })
+            })
 
           // 测试通道，不为空直接登录
           // setTimeout(() => {
@@ -77,16 +76,14 @@ export default {
           //   this.$router.push({path: '/index'})
           // }, 1000)
 
-
-          //TODO记住密码操作
+          // TODO记住密码操作
         } else {
           this.$message.error('请输入用户名密码！')
           this.logining = false
           return false
         }
       })
-    },
-
+    }
 
   }
 }

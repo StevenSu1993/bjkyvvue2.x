@@ -1,13 +1,12 @@
 <template>
 
-
   <el-container class="index-con">
     <el-aside :class="showclass">
-      <Leftnav></Leftnav>
+      <LeftNav></LeftNav>
     </el-aside>
     <el-container class="main-con">
       <el-header class="index-header">
-        <Navcon></Navcon>
+        <NavCon></NavCon>
       </el-header>
       <el-main clss="index-main">
         <router-view></router-view>
@@ -15,26 +14,24 @@
     </el-container>
   </el-container>
 
-
 </template>
 
 <script>
-import Leftnav from "../components/Leftnav";
-import Navcon from "../components/Navcon";
+import LeftNav from '../components/Leftnav'
+import NavCon from '../components/Navcon'
 export default {
-  name: "Index",
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Index',
 
-  components: {Navcon, Leftnav},
-  data() {
-
+  components: { NavCon, LeftNav },
+  data () {
     return {
       showclass: 'asideshow',
       showtype: false
     }
   },
 
-  created() {
-
+  created () {
     // 监听
     this.$bus.$on('toggle', value => {
       if (value) {
@@ -45,7 +42,7 @@ export default {
         }, 300)
       }
     })
-  },
+  }
 }
 </script>
 

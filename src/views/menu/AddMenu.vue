@@ -32,12 +32,12 @@ export default {
         ]
       },
       message: '',
-      message1: ""
+      message1: ''
     }
   },
   methods: {
     async init () {
-     await request.get('api/hello').then(res => {
+      await request.get('api/hello').then(res => {
         this.message = res.data
       })
     }
@@ -45,11 +45,11 @@ export default {
   mounted () {
   },
   created () {
-
-    console.log("addMenu中查看route.path", this.$route.path)
+    console.log('addMenu中查看route.path', this.$route.path)
 
     console.log(this.$router.options.routes)
-    this.message1 ? this.message1 = this.message1 : this.message1 = "test"
+    // eslint-disable-next-line no-unused-expressions
+    this.message1 ? this.message1 : this.message1 = 'test'
     this.init()
   }
 }

@@ -18,17 +18,16 @@
 
   </el-menu>
 
-
 </template>
 
 <script>
 export default {
-  name: 'Navcon',
+  name: 'NavCon',
   data () {
     return {
       collapsed: true,
       imgshow: require('../assets/img/show.png'),
-      imgsq: require('../assets/img/sq.png'),
+      imgsq: require('../assets/img/sq.png')
     }
   },
   methods: {
@@ -45,24 +44,24 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-          .then(() => {
-            setTimeout(() => {
-              this.$store.commit('logout', false)
-              this.$router.push('/login').catch(() => {
-              })
-              this.$message({
-                type: 'success',
-                message: '已退出登录!'
-              })
-            }, 1000)
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
+        .then(() => {
+          setTimeout(() => {
+            this.$store.commit('logout', false)
+            this.$router.push('/login').catch(() => {
             })
+            this.$message({
+              type: 'success',
+              message: '已退出登录!'
+            })
+          }, 1000)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
           })
-    },
+        })
+    }
 
   }
 }

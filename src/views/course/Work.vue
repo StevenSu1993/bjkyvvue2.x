@@ -11,7 +11,6 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
 
-
     <el-row style="padding: 20px">
       <el-button type="primary" plain @click="newCourse">新建课程</el-button>
       <el-button plain @click="batchAddManager">批量添加课程管理员</el-button>
@@ -51,7 +50,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- 分页 这里还有点问题还需要好好写写-->
     <Pagination v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
 
   </div>
@@ -62,19 +60,12 @@
 import Pagination from '../../components/Pagination'
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Work',
   components: {
     Pagination
   },
   data () {
-    const item = {
-      courseName: '口语纠音课',
-      countPratice: 14,
-      countUser: 12,
-      countSubmit: 130,
-      userName: 'steven'
-    }
-
     return {
       show: true,
       coureTotal: 0,
@@ -92,15 +83,14 @@ export default {
         varLable: '',
         varName: '',
         token: localStorage.getItem('logintoken')
-      },
+      }
       // tableData: Array(10).fill(item),
     }
-
   },
 
   methods: {
     getdata: async function (parameter) {
-      //根据courseName 去查询数据
+      // 根据courseName 去查询数据
       // alert('调用搜索方法后端。利用axios 请求数据，进行渲染', parameter)
       return await this.$request.get('api/auth/getAllCourse', {
         params: parameter
@@ -108,11 +98,10 @@ export default {
         console.log('getData', res)
         return res
       })
-
     },
     search () {
       console.log('根据名字去模糊查询', this.formInline.courseName)
-      let params = {
+      const params = {
         start: 0,
         size: 10,
         name: this.formInline.courseName
@@ -126,49 +115,43 @@ export default {
         console.log(res.data.data)
         this.pageparm.total = res.data.data
       })
-
     },
     // 分页插件事件
     async callFather (parm) {
-
-      alert('去后台查询数据\'')
       console.log('parm的值为', parm)
       this.formInline.page = parm.currentPage
       this.formInline.limit = parm.pageSize
 
-      let params = {
+      const params = {
         start: parm.currentPage,
         size: parm.pageSize
       }
       if (this.formInline.courseName != null) {
         params.name = this.formInline.courseName
       }
-      //TODO去后端获取数据
+      // TODO去后端获取数据
       this.show = false
       await this.$request.get('api/auth/getAllCourse', { params: params }).then(res => {
         console.log(res)
         this.show = true
         this.tableData = res.data.data.records
       })
-
     },
     newCourse () {
-
       this.$router.push('/createCourse')
       alert('新建一个课程')
-
     },
     batchAddManager () {
       alert('批量添加管理员')
     },
     init () {
       console.log('this is work init')
-      let data = this.getdata({
-        start: 0,
-        size: 10
-      }).then(res => {
-        this.tableData = res.data.data.records
-      })
+      // const data = this.getdata({
+      //   start: 0,
+      //   size: 10
+      // }).then(res => {
+      //   this.tableData = res.data.data.records
+      // })
 
       this.$request.get('api/auth/getCountCourse').then(res => {
         console.log(res.data.data)
@@ -178,9 +161,7 @@ export default {
     }
   },
   created () {
-
     this.init()
-
   }
 }
 </script>

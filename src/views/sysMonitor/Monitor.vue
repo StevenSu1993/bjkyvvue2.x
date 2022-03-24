@@ -15,7 +15,6 @@
         <i class="el-icon-refresh" style="margin-left: 40px" @click="init"/>
       </div>
 
-
     </el-card>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -132,7 +131,6 @@
       </el-row>
     </div>
 
-
   </div>
 </template>
 
@@ -142,6 +140,7 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/component/polar'
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Monitor',
   components: {
     'v-chart': ECharts
@@ -161,12 +160,12 @@ export default {
           available: '',
           total: '',
           used: '',
-          usageRate:''
+          usageRate: ''
         },
         swap: {
           usageRate: ' ',
           used: '',
-          total: '',
+          total: ''
         },
         cpu: {
           name: '',
@@ -178,8 +177,8 @@ export default {
         },
         memory: {
           total: '',
-          usageRate:'',
-          used: '',
+          usageRate: '',
+          used: ''
         }
       },
       cpuInfo: {
@@ -261,7 +260,6 @@ export default {
   },
   methods: {
     async init () {
-
       await this.$request.get(this.url).then(data => {
         // console.log(data.data)
         this.show = true

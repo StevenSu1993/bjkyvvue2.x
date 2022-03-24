@@ -42,21 +42,20 @@
 
 <script>
 import Background from '../assets/images/background.jpeg'
-import {decrypt, encrypt} from '../utils/rsaEncrypt'
+import { decrypt, encrypt } from '../utils/rsaEncrypt'
 import Cookies from 'js-cookie'
 import Config from '../settings'
 // import {setToken} from "../utils/auth";
-import {getCodeImg} from "../api/login";
-import {setToken} from "../utils/auth";
-import request from "../utils/request";
+import { getCodeImg } from '../api/login'
 
 export default {
-  name: "Login",
-  created() {
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Login',
+  created () {
     this.getCode()
     this.getCookie()
   },
-  data() {
+  data () {
     return {
       loginForm: {
         username: 'admin',
@@ -66,19 +65,19 @@ export default {
         uuid: ''
       },
       loginRules: {
-        username: [{required: true, trigger: 'blur', message: '用户名不能为空'}],
-        password: [{required: true, trigger: 'blur', message: '密码不能为空'}],
-        code: [{required: true, trigger: 'blur', message: '验证码不能为空'}]
+        username: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
+        code: [{ required: true, trigger: 'blur', message: '验证码不能为空' }]
       },
       Background: Background,
       codeUrl: '',
       loading: false,
-      //把加密后的密码存放到Cookies
+      // 把加密后的密码存放到Cookies
       cookiePass: ''
     }
   },
   methods: {
-    getCookie() {
+    getCookie () {
       const username = Cookies.get('username')
       let password = Cookies.get('password')
       const rememberMe = Cookies.get('rememberMe')
@@ -92,21 +91,19 @@ export default {
         code: ''
       }
     },
-    getCode() {
-      console.log("进入到getCode")
-      //发送请求给后端，需要用到axios
+    getCode () {
+      console.log('进入到getCode')
+      // 发送请求给后端，需要用到axios
       getCodeImg().then(res => {
         this.codeUrl = res.data.img
         this.loginForm.uuid = res.data.uuid
       }).catch(err => {
         console.log(err.response)
       })
-
-
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate(valid => {
-        if (valid) {//如果表单校验通过，则发送登陆请求
+        if (valid) { // 如果表单校验通过，则发送登陆请求
           const user = {
             username: this.loginForm.username,
             password: this.loginForm.password,
@@ -118,9 +115,9 @@ export default {
             user.password = encrypt(user.password)
           }
           if (user.rememberMe) {
-            Cookies.set('username', user.username, {expires: Config.passCookieExpires})
-            Cookies.set('password', user.password, {expires: Config.passCookieExpires})
-            Cookies.set('rememberMe', user.rememberMe, {expires: Config.passCookieExpires})
+            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
+            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
+            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
           } else {
             Cookies.remove('username')
             Cookies.remove('password')
@@ -136,10 +133,10 @@ export default {
                   this.loading = false
                     this.$message.error("请检查输入信息")
                 }
-              })*/
+              }) */
 
           // 另外一种写法 只有promise
-          this.$store.dispatch("login", user).then(res => {
+          this.$store.dispatch('login', user).then(res => {
             console.log('登陆了,{}', res)
             this.$router.push('/index').catch(err => {
               console.log(err)
@@ -148,22 +145,21 @@ export default {
           }).catch(err => {
             this.loading = false
             console.log(err.response)
-            if (err.response.status == 401) {
+            if (err.response.status === 401) {
               this.getCode()
-              this.$message.error("用户名或密码错误")
+              this.$message.error('用户名或密码错误')
             } else {
-              //验证码错误
+              // 验证码错误
               this.getCode()
               this.$message.error(err.response.data.msg)
             }
           })
-        } else this.$message.error("请完善信息")
+        } else this.$message.error('请完善信息')
       })
     }
   }
 }
 </script>
-
 
 <style rel="stylesheet/scss" lang="scss">
 .login {

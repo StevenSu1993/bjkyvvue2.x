@@ -11,31 +11,28 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
 
-
-
-
   </div>
 </template>
 
 <script>
 export default {
-  name: "ShowStudentInfo",
-  data() {
+  name: 'ShowStudentInfo',
+  data () {
     return {
       allCourse: []
     }
   },
-  created() {
-    //路由传递过来的参数
+  created () {
+    // 路由传递过来的参数
     console.log(this.$route.query.row)
-    let currentUser = this.$route.query.row
+    const currentUser = this.$route.query.row
     // 根据用户id 去查他所有的课程
-    this.$request.get("api/auth/getCourseByUserId", {
+    this.$request.get('api/auth/getCourseByUserId', {
       params: {
-        "userId": currentUser.id
+        userId: currentUser.id
       }
     }).then(res => {
-      console.log("查询到改用户所有的课程 : {}", res.data)
+      console.log('查询到改用户所有的课程 : {}', res.data)
       this.allCourse = res.data.data
     })
   }
