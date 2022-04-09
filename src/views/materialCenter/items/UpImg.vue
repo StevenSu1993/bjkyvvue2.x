@@ -19,7 +19,7 @@
           <el-option value="1" label="按时间"></el-option>
         </el-select>
 
-        <el-input v-model="imageName" placeholder="请输入图片名称搜索" size="mini"
+        <el-input v-model=" materialName" placeholder="请输入图片名称搜索" size="mini"
                   style="width:160px;;margin-left: 30px"></el-input>
         <el-button type="primary" size="mini" icon="el-icon-search" @click="search">搜索</el-button>
       </div>

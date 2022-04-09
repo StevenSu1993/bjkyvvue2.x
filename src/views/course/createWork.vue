@@ -10,7 +10,7 @@
       </el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+    <el-form v-model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
       <el-form-item label="作业标题/班级名" prop="name">
         <el-input placeholder="请输入不超过30汉字或60字母的标题" v-model="ruleForm.name"></el-input>
       </el-form-item>

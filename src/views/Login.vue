@@ -42,11 +42,11 @@
 
 <script>
 import Background from '../assets/images/background.jpeg'
-import { decrypt, encrypt } from '../utils/rsaEncrypt'
+import { decrypt, encrypt } from '@/utils/rsaEncrypt'
 import Cookies from 'js-cookie'
 import Config from '../settings'
 // import {setToken} from "../utils/auth";
-import { getCodeImg } from '../api/login'
+import { getCodeImg } from '@/api/login'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -58,8 +58,8 @@ export default {
   data () {
     return {
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
         code: '',
         rememberMe: false,
         uuid: ''

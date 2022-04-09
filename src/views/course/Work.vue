@@ -18,7 +18,7 @@
     </el-row>
 
     <!-- 搜索筛选 -->
-    <el-form :inline="true" :model="formInline" class="user-search">
+    <el-form :inline="true" v-model="formInline" class="user-search">
       <el-form-item label="搜索：">
         <el-input size="small" v-model="formInline.courseName" placeholder="请输入课程名或创建人"></el-input>
       </el-form-item>

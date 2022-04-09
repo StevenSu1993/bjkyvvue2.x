@@ -3,7 +3,7 @@
         <h3 class="title">
           EL-ADMIN 后台管理系统
         </h3>
-    <el-form label-position="left" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px"
+    <el-form label-position="left" v-model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px"
              class="demo-ruleForm login-container">
       <h3 class="title">用户登录</h3>
       <el-form-item prop="name">

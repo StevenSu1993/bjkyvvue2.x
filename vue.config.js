@@ -1,6 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
-  // lintOnSave: false, //关闭语法检查
+  lintOnSave: false, // 关闭语法检查
   devServer: {
     port: 9001,
     proxy: {
