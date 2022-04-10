@@ -73,12 +73,6 @@
         </el-dialog>
       </div>
 
-      <!--      <audio-->
-      <!--          v-else-if = "fileType === 5"-->
-      <!--          :src='src'-->
-      <!--          style="width: 114px;height: 114px"-->
-      <!--          controls-->
-      <!--          :autoplay="false"/>-->
       <!-- 说明是文件夹-->
       <el-image v-else-if="fileType === 7"
                 fit="fill"
@@ -114,20 +108,11 @@ export default {
         配置了代理，正确访问的路径是 http://localhost:9001/1647806591575test%20-%20Copy%20(6).png
          */
         return 'api/' + this.src
-      },
-
-      // set什么时候调用? 当fullName被修改时。
-      set (value) {
-        console.log('set被调用了', value)
       }
     },
     currentTime: {
       get: function () {
         return Date.now()
-      },
-      // set什么时候调用? 当fullName被修改时。
-      set (value) {
-        console.log('set被调用了', value)
       }
     }
 
@@ -144,28 +129,21 @@ export default {
     }
   },
   created () {
-    console.log('this allMeterial創建了')
-    // console.log('this input id ', this.uuidFileName)
     this.$on('canceCheck', value => {
-      console.log('子组件监听到了取消全选的时间。')
       this.checked = false
     })
   },
   methods: {
     openFolder () {
       // 调用父类刷新页面的函数去更新页面
-      console.log('this.filesId', this.filesId)
       this.refreshPage(this.filesId, this.myFileName)
     },
 
-    loseFocus (val) {
-      console.log('失去焦点了，上传服务器新建一个文件夹', val)
-
+    async loseFocus (val) {
       // 默认情况下文件都是素材库的子目录
       this.myFileName = val.target.value
-      console.log('this.myFileName', this.myFileName)
       // #region 发送数据给后端让他创建目录
-      this.$request.get('api/auth/createFolder', {
+      await this.$request.get('api/auth/createFolder', {
         params: {
           // 文件名是必须的
           folderName: this.myFileName,
@@ -179,21 +157,26 @@ export default {
         if (res.data.code === 400) {
           this.$message.info(res.data.data)
         } else {
+          // 通知父类去更新目录
+          this.refreshPage(this.parentFolderId, this.myFileName)
+          this.$message.success('创建文件夹成功')
           this.myIsNewFolder = false
         }
-        console.log(res)
       })
+      console.log('创建成功')
       // #endregion
     },
     onFocus () {
-      console.log('获得焦点')
     },
     handleClose (done) {
       done()
     },
     onchecked (emit) {
       // 当被选中的时候让父组件中的删除按钮可用
-      console.log('子组件的', emit)
+      console.log(emit)
+      if (!emit.target.value.length > 0) {
+        emit.target.value = this.filesId
+      }
       this.canDelete(emit.target.checked, emit.target.value)
     },
 

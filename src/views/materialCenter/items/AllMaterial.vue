@@ -14,7 +14,6 @@
           <el-button size="small" type="primary">上传素材</el-button>
         </el-upload>
 
-        <!--      <el-button style="border:none" plain @click="upFile"> 批量上传</el-button>-->
         <el-link style="margin-left: 20px" :underline="false" type="primary" @click="newFolder">新建文件夹</el-link>
         <el-dialog
             class="dialog"
@@ -44,7 +43,7 @@
           <el-button type="primary" size="mini" plain @click="changRangByAll">全部</el-button>
         </el-button-group>
         <el-select ref="elSelect" placeholder="请选择" v-model="orderValue" size="mini"
-                   style="width: 100px;margin-left: 30px">
+                   style="width: 100px;margin-left: 30px" @click="orderBy">
           <el-option value="0" label="按名称"></el-option>
           <el-option value="1" label="按时间"></el-option>
         </el-select>
@@ -78,10 +77,11 @@
     </div>
     <!-- endregion -->
     <!-- region 内容展示-->
-    <div class="details" v-show="show">
+    <div ref="filesContent" class="details" id="container" v-show="show">
       <!--判断是否要创建新的文件夹-->
-      <Detail ref="Detail" :canDelete="canDelete"
-              v-for="it in folderList" :key="it.toString()"
+      <Detail ref="Detail"
+              v-if="createFolder"
+              :canDelete="canDelete"
               :fileType="7"
               :isFolder=true
               :isNewFolder=true
@@ -169,6 +169,11 @@ export default {
         label: 'fileName'
       },
       querys: [],
+      UUID: {
+        get: function () {
+          return uuidByTime()
+        }
+      },
       treeData: []
     }
   },
@@ -180,22 +185,22 @@ export default {
       handler (newValue, oldValue) {
         this.disabled = this.fileIds.length === 0
         this.checkTotal = this.fileIds.length
-        // console.log('disabled', newValue, oldValue)
+      }
+    },
+    orderValue: {
+      // handler什么时候调用？当fileIds发生改变时。
+      handler (newValue, oldValue) {
+        // 可以通过监视某个组件的值的变化去发送请求。渲染界面
+        console.log(this.orderValue)
       }
     }
   },
   computed: {
     headers: {
       get () {
-        console.log('get被调用了')
-        // console.log(this) //此处的this是vm
         return {
           Authorization: getToken()
         }
-      },
-      // set什么时候调用? 当fullName被修改时。
-      set (value) {
-        console.log('set被调用了', value)
       }
     },
     upData: {
@@ -203,22 +208,11 @@ export default {
         return {
           curentFolderId: this.curentFolderId
         }
-      },
-      // set什么时候调用? 当fullName被修改时。
-      set (value) {
-        console.log('set被调用了', value)
       }
     },
     uuid: {
       get () {
-        console.log('get被调用了')
-        const uuid = uuidByTime()
-        console.log(uuid)
-        return uuid
-      },
-      // set什么时候调用? 当fullName被修改时。
-      set (value) {
-        console.log('set被调用了', value)
+        return uuidByTime()
       }
     },
 
@@ -236,11 +230,10 @@ export default {
 
   },
   methods: {
-
+    orderBy () {
+    },
     // #region 新建文件夹操作
     returnToPreviousLevel () {
-      // 感觉需要一个变量用来控制是否显示上一级哪个div
-      console.log('返回上一级目录')
       // 第一步获取当前目录的上一级id
       const promise = new Promise((resolve, reject) => {
         this.$request.get('api/auth/getParentFolderId', {
@@ -251,34 +244,24 @@ export default {
           resolve(res.data.data.parentFolderId)
         })
       })
+      // 第二： 根据获得的目录的上一级目录进行后续查询
       promise.then(parentFolderId => {
-        var params = { ...this.deFaultQueryData }
+        const params = { ...this.deFaultQueryData }
         params.parentFolderId = parentFolderId
-        this.initData('api/auth/getFileByType', {
-          start: 0,
-          size: 10,
-          parentFolderId: parentFolderId,
-          type: 0
-        })
+        this.initData('api/auth/getFileByType', params)
       })
     },
     refreshPage (curentFileId, fileName) {
-      // 在创建了文件夹以后，双击进入到文件的时候要清空掉FolderList, 否则创建的文件夹一直显示
-      this.folderList = []
+      // 在创建了文件夹以后，双击进入到文件的时候要把createFolder 改为false , 否则创建的文件夹一直显示
+      this.createFolder = false
       this.curentFolderId = curentFileId
       this.curentFolderName = fileName
-      console.log('开始刷新页面')
-      this.initData('api/auth/getFileByType', {
-        start: 0,
-        size: 10,
-        parentFolderId: curentFileId,
-        type: 0
-      })
+      const params = { ...this.deFaultQueryData }
+      params.parentFolderId = curentFileId
+      this.initData('api/auth/getFileByType', params)
     },
     newFolder () {
       this.createFolder = true
-      this.folderList.push(Detail)
-      console.log(this.folderList)
     },
     // #endregion
 
@@ -296,7 +279,6 @@ export default {
           to: this.querys[0]
         }
       }).then(res => {
-        console.log('更新完成以后 刷新页面')
         this.showNewFolder = false
         this.search()
       })
@@ -305,11 +287,8 @@ export default {
       done()
     },
     moveToFolder () {
-      console.log('开始移动的文件加')
       // 从后端获取数据用来展示tree
-      this.$request.get('/api/auth/getAllFolder', {
-        params: {}
-      }).then(res => {
+      this.$request.get('/api/auth/getAllFolder').then(res => {
         this.showNewFolder = true
         // 这里有个不好的样式就是默认情况下。 叶子节点是没有任何图标的
         this.treeData = res.data.data
@@ -346,7 +325,6 @@ export default {
     // 删除按钮的联动功能
     canDelete (isDisable, fileId) {
       // 让删除按钮变的可用
-      console.log('这是从子组件传递过来的值', isDisable)
       if (isDisable) {
         this.fileIds.push(fileId)
       } else {
@@ -354,10 +332,9 @@ export default {
         const i = this.fileIds.indexOf(fileId)
         this.fileIds.splice(i, 1)
       }
-      console.log('fileIds 现在有的值为', this.fileIds)
     },
     // 删除文件
-    deleteByIds () {
+    async deleteByIds () {
       this.$alert('确定要删除选中的文件吗', '删除文件', {
         showCancelButton: true,
         confirmButtonText: '确定',
@@ -371,7 +348,6 @@ export default {
                 ids: this.fileIds + ''
               }
             }).then(res => {
-              console.log(res)
               instance.confirmButtonLoading = false
               done()
               this.fileIds = []
@@ -390,7 +366,18 @@ export default {
         })
       })
     },
-    callFather () {
+    callFather (pageparm) {
+      console.log('pageparm的值为', pageparm)
+      const params = { ...this.deFaultQueryData }
+      params.start = pageparm.currentPage
+      params.pageSize = pageparm.pageSize
+      params.parentFolderId = this.curentFolderId
+      if (this.materialName.length > 0) {
+        params.name = this.materialName
+        params.excludeFolder = true
+      }
+      // TODO去后端获取数据
+      this.initData('api/auth/getFileByNameAndSort', params)
     },
 
     // 页面初始化
@@ -410,24 +397,24 @@ export default {
         } else {
           this.showReturnToPreviousLevel = true
         }
+        // 模糊搜索不需要显示返回上一级
+        if (this.materialName.length > 0) {
+          this.showReturnToPreviousLevel = false
+        }
         this.show = true
       })
     },
     search () {
+      const params = { ...this.deFaultQueryData }
+      params.name = this.materialName
+      params.parentFolderId = this.curentFolderId
+
       // 根据时间或者名称排序，
-      this.initData('api/auth/getFileByNameAndSort', {
-        start: this.pageparm.currentPage,
-        size: this.pageparm.pageSize,
-        type: 0, // 0 所有文件 1 表示图片,2 表示文档,3 表示视频,4 表示种子,5 表示音乐,6 表示其它
-        name: this.materialName,
-        parentFolderId: this.curentFolderId,
-        rang: this.rang,
-        orderValue: this.orderValue
-      })
+      this.initData('api/auth/getFileByNameAndSort', params)
     },
 
     searchByLike () {
-      var params = { ...this.deFaultQueryData }
+      const params = { ...this.deFaultQueryData }
       // 根据时间或者名称排序，
       if (this.materialName.length > 0) {
         params.name = this.materialName
@@ -437,26 +424,19 @@ export default {
         delete params.name
         delete params.excludeFolder
       }
-      console.log(this.deFaultQueryData, params)
       this.initData('api/auth/getFileByNameAndSort', params)
-    },
-    upFile () {
-    },
-    onchecked () {
     }
   },
   // created 声明周期钩子
   created () {
+    console.log(this.UUID.get())
+    console.log(this.UUID.get())
+    const params = { ...this.deFaultQueryData }
+    params.folderGrade = 2
+    params.isCreated = true
     this.$request('api/auth/getFileByType', {
-      params: {
-        start: 0,
-        size: 10,
-        folderGrade: 2,
-        isCreated: true,
-        type: 0
-      }
+      params
     }).then(res => {
-      console.log('this is allmaterial 获取到的数据', res.data.data)
       this.fileData = res.data.data.records
       this.fileTotal = res.data.data.total
       this.pageparm.total = res.data.data.total
