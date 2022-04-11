@@ -1,9 +1,7 @@
 <template>
   <el-menu class="el-menu-demo" mode="horizontal" background-color="#334157" text-color="#fff" active-text-color="#fff">
     <el-menu-item>
-      <el-button class="buttonimg">
-        <img class="showimg" :src="collapsed?imgsq:imgshow" @click="toggle(collapsed)">
-      </el-button>
+      <img class="showimg" :src="collapsed?imgsq:imgshow" @click="toggle(collapsed)">
     </el-menu-item>
     <el-submenu class="submenuItem" style="float:right;" index="4">
       <!-- <template slot="title">{{user.userRealName}}</template> -->

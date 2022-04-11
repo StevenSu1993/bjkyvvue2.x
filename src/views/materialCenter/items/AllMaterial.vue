@@ -429,8 +429,6 @@ export default {
   },
   // created 声明周期钩子
   created () {
-    console.log(this.UUID.get())
-    console.log(this.UUID.get())
     const params = { ...this.deFaultQueryData }
     params.folderGrade = 2
     params.isCreated = true
