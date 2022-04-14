@@ -5,12 +5,13 @@ import E from 'wangeditor'
 
 export const test1 = 'safaf'
 
-const { $, BtnMenu, DropListMenu, PanelMenu, DropList, Panel, Tooltip } = E
+const { $, BtnMenu } = E
+
 export class AlertMenu extends BtnMenu {
   constructor (editor) {
     // data-title属性表示当鼠标悬停在该按钮上时提示该按钮的功能简述
     const $elem = E.$(
-            `<div class="w-e-menu" data-title="Alert">
+      `<div class="w-e-menu" data-title="Alert">
                 <button>alert11</button>
             </div>`
     )
@@ -30,7 +31,7 @@ export class AlertMenu extends BtnMenu {
 export class Video1 extends BtnMenu {
   constructor (editor) {
     const $elem = E.$(
-            `<div class"w-e-menu" data-title="视频">
+      `<div class"w-e-menu" data-title="视频">
 				<i class="w-e-icon-play"></i>
 				<button>alert1133</button>
 			</div>`
@@ -59,7 +60,7 @@ export class Video1 extends BtnMenu {
 export class Voice1 extends BtnMenu {
   constructor (editor) {
     const $elem = $(
-            `<div class"w-e-menu" data-title="音频">
+      `<div class"w-e-menu" data-title="音频">
 				<i class="w-e-icon-play"></i>
 				<buttoon></buttoon>
 			</div>`
@@ -75,5 +76,6 @@ export class Voice1 extends BtnMenu {
   }
 
   // 尝试修改菜单 active状态
-  tryChangeActive () {}
+  tryChangeActive () {
+  }
 }

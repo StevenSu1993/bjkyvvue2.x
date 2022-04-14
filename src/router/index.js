@@ -8,6 +8,7 @@ import ShowStudentInfo from '../views/systemStudents/ShowStudentInfo'
 import createWork from '../views/course/createWork'
 import request from '@/utils/request'
 import allRoutes from '@/router/allRoute'
+import wangEditorTest from '@/views/materialCenter/wangEditorTest'
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ const routes = [
         path: '/showStudentInfo',
         name: 'showStudentInfo',
         component: ShowStudentInfo
+      },
+      {
+        path: '/wangEditor',
+        name: 'wangEditor',
+        component: wangEditorTest
       },
       {
         path: '/createCourse',

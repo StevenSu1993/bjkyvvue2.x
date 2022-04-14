@@ -233,6 +233,7 @@ export default {
     orderBy () {
     },
     // #region 新建文件夹操作
+    // 放回上一层目录
     returnToPreviousLevel () {
       // 第一步获取当前目录的上一级id
       const promise = new Promise((resolve, reject) => {
@@ -248,9 +249,11 @@ export default {
       promise.then(parentFolderId => {
         const params = { ...this.deFaultQueryData }
         params.parentFolderId = parentFolderId
+        params.orderValue = 1
         this.initData('api/auth/getFileByType', params)
       })
     },
+    // 双击进入到某个文件夹
     refreshPage (curentFileId, fileName) {
       // 在创建了文件夹以后，双击进入到文件的时候要把createFolder 改为false , 否则创建的文件夹一直显示
       this.createFolder = false
@@ -258,6 +261,7 @@ export default {
       this.curentFolderName = fileName
       const params = { ...this.deFaultQueryData }
       params.parentFolderId = curentFileId
+      params.orderValue = 1
       this.initData('api/auth/getFileByType', params)
     },
     newFolder () {
@@ -432,6 +436,8 @@ export default {
     const params = { ...this.deFaultQueryData }
     params.folderGrade = 2
     params.isCreated = true
+    // 页面以初始化的情况下就按照时间进行排序
+    params.orderValue = 1
     this.$request('api/auth/getFileByType', {
       params
     }).then(res => {
