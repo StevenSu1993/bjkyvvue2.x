@@ -54,7 +54,7 @@ class AlertMenu extends BtnMenu {
         console.log('res', res, 'e', e)
         // var src = Config.baseUrl + res.data.data
         editor.enable()// 上传完毕，允许编辑器使用，这一行必须在插入html上面，否则，插入html失效，毕竟，编辑器被禁用了。
-        const html = `<audio src="${Config.baseUrl}/${res.data}"  fileid="${e.id}" controls></audio></br>`
+        const html = `<br><audio src="${Config.baseUrl}/${res.data}"  fileid="${e.id}" controls></audio><br/>`
         editor.cmd.do('insertHTML', html)
         Message.success('插入成功')
       })

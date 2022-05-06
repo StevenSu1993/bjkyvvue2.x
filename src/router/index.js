@@ -5,10 +5,13 @@ import { getToken } from '@/utils/auth'
 import Index from '../views/Index'
 import store from '../store/index'
 import ShowStudentInfo from '../views/systemStudents/ShowStudentInfo'
-import createWork from '../views/course/createWork'
 import request from '@/utils/request'
 import allRoutes from '@/router/allRoute'
 import wangEditorTest from '@/views/materialCenter/wangEditorTest'
+import EditTemplateMaterial from '@/views/materialCenter/EditTemplateMaterial'
+import CreateHomeWork from '@/views/course/CreateHomeWork'
+import EditCourse from '@/views/course/EditCourse'
+import CreateCourse from '@/views/course/CreateCourse'
 
 Vue.use(Router)
 
@@ -42,9 +45,27 @@ const routes = [
       {
         path: '/createCourse',
         name: 'createCourse',
-        component: createWork
+        component: CreateCourse
+      },
+      {
+        path: '/course/:id',
+        name: 'editCourse',
+        meta: {
+          activeMenu: '/course'
+        },
+        component: EditCourse
       }
     ]
+  },
+  {
+    path: '/editorTemplate',
+    name: 'editorTemplate',
+    component: EditTemplateMaterial
+  },
+  {
+    path: '/createHomeWork',
+    name: 'createHomeWork',
+    component: CreateHomeWork
   }
 
 ]
@@ -85,7 +106,10 @@ router.beforeEach(async (to, from, next) => {
         // 把菜单放到store中去，为了动态生成路由
         store.dispatch('setRouteByMenu', allmenu)
         getRoutes(allmenu)
-        next({ ...to, replace: true })// router.addRoutes 是异步的。 这一步相当于做了一次拦截，让浏览器在重新访问一次。下次进来的时候就能访问到我们添加的路由策略了。同时也能解决访问地址空白的页面的情况
+        next({
+          ...to,
+          replace: true
+        })// router.addRoutes 是异步的。 这一步相当于做了一次拦截，让浏览器在重新访问一次。下次进来的时候就能访问到我们添加的路由策略了。同时也能解决访问地址空白的页面的情况
       })
     }
     // console.log("去访问后端以后生成的路由", router.options.routes)

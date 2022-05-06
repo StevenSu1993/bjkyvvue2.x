@@ -10,6 +10,7 @@
         <el-button type="text" disabled>作业课程</el-button>
       </el-breadcrumb-item>
     </el-breadcrumb>
+    `
 
     <el-row style="padding: 20px">
       <el-button type="primary" plain @click="newCourse">新建课程</el-button>
@@ -61,7 +62,7 @@ import Pagination from '../../components/Pagination'
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: 'Work',
+  name: 'Course',
   components: {
     Pagination
   },
@@ -89,11 +90,21 @@ export default {
   },
 
   methods: {
-    getdata: async function (parameter) {
+
+    handleEdit (index, row) {
+      this.$router.push({
+        name: 'editCourse',
+        params: {
+          id: row.id,
+          row: row
+        }
+      })
+    },
+    getdata: async function (params) {
       // 根据courseName 去查询数据
       // alert('调用搜索方法后端。利用axios 请求数据，进行渲染', parameter)
       return await this.$request.get('api/auth/getAllCourse', {
-        params: parameter
+        params
       }).then(res => {
         console.log('getData', res)
         return res
@@ -146,14 +157,15 @@ export default {
     },
     init () {
       console.log('this is work init')
-      // const data = this.getdata({
-      //   start: 0,
-      //   size: 10
-      // }).then(res => {
-      //   this.tableData = res.data.data.records
-      // })
+      this.getdata({
+        start: 0,
+        size: 10
+      }).then(res => {
+        this.tableData = res.data.data.records
+      })
 
       this.$request.get('api/auth/getCountCourse').then(res => {
+        console.log('课程管理', res)
         console.log(res.data.data)
         this.coureTotal = res.data.data
         this.pageparm.total = this.coureTotal

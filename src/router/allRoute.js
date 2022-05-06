@@ -1,14 +1,17 @@
-import Work from '../views/course/Work'
 import Login from '../views/Login'
 import ImageMaterial from '../views/materialCenter/ImageMaterial'
-import TemplateMaterial from '../views/materialCenter/TemplateMaterial'
+import NewTemplateMaterial from '../views/materialCenter/NewTemplateMaterial'
 import Student from '../views/systemStudents/Student'
 import ClassManage from '../views/systemStudents/ClassManage'
 import AddMenu from '../views/menu/AddMenu'
 import ShowMenu from '../views/menu/ShowMenu'
 import Monitor from '../views/sysMonitor/Monitor'
 import ShowStudentInfo from '../views/systemStudents/ShowStudentInfo'
-import createWork from '../views/course/createWork'
+import TemplateMaterial from '@/views/materialCenter/TemplateMaterial'
+import CreateHomeWork from '@/views/course/CreateHomeWork'
+import Course from '@/views/course/Course'
+import EditCourse from '@/views/course/EditCourse'
+import CreateCourse from '@/views/course/CreateCourse'
 // 尝试了好多写写法就是component 不能再对象中生成， 因为要引入文件所有只能写在这
 const allRoutes = [
   {
@@ -17,9 +20,9 @@ const allRoutes = [
     component: Login
   },
   {
-    path: '/work',
+    path: '/course',
     name: '作业课程',
-    component: Work
+    component: Course
     // meta: {
     //     requireAuth: true
     // }
@@ -30,9 +33,9 @@ const allRoutes = [
     component: ImageMaterial
   },
   {
-    path: '/templateM',
-    name: '模板素材',
-    component: TemplateMaterial
+    path: '/newTemplateM',
+    name: '新建模板素材',
+    component: NewTemplateMaterial
   },
   {
     path: '/student',
@@ -69,7 +72,26 @@ const allRoutes = [
   {
     path: '/createCourse',
     name: 'createCourse',
-    component: createWork
+    component: CreateCourse
+  },
+
+  {
+    path: '/TemplateM',
+    name: '模板素材',
+    component: TemplateMaterial
+  },
+  {
+    path: '/course/:id',
+    name: 'editCourse',
+    meta: {
+      activeMenu: '/course'
+    },
+    component: EditCourse
+  },
+  {
+    path: '/createHomeWork',
+    name: 'createHomeWork',
+    component: CreateHomeWork
   }
 ]
 export default allRoutes

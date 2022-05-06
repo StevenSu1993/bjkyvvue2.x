@@ -75,7 +75,7 @@
 
 <script>
 export default {
-  name: 'createWork',
+  name: 'CreateCourse',
 
   data () {
     return {

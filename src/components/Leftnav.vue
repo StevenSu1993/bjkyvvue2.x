@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <el-menu  :collapse="collapsed" collapse-transition router :default-active="$route.path"
+    <el-menu :collapse="collapsed" collapse-transition router :default-active="onRoutes"
              unique-opened class="el-menu-vertical-demo" background-color="#334157" text-color="#fff"
              active-text-color="#ffd04b">
       <div class="logobox">
@@ -13,7 +13,7 @@
           <span>{{ menu.name }}</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item v-for="chmenu in menu.childMenu" :index="chmenu.url"  :key="chmenu.id">
+          <el-menu-item v-for="chmenu in menu.childMenu" :index="chmenu.url" :key="chmenu.id">
             <i class="iconfont" :class="chmenu.icon"></i>
             <span>{{ chmenu.name }}</span>
           </el-menu-item>
@@ -29,15 +29,26 @@
 
 export default {
   name: 'LeftNav',
+  computed: {
+    onRoutes () {
+      const route = this.$route
+      const { meta, path } = route
+      // 可以在路由配置文件中设置自定义的路由路径到meta.activeMenu属性中，来控制菜单自定义高亮显示
+      // meta中 有activeMenu 字段的页面，都会显示高亮
+      console.log(meta)
+      if (meta.activeMenu) {
+        return meta.activeMenu
+      }
+      return path
+    }
+  },
   data () {
     return {
       collapsed: false,
       allmenu: []
     }
   },
-  methods: {
-
-  },
+  methods: {},
   created: function () {
     // this.allmenu = res;
     // 首先判断用户是否登录
@@ -86,7 +97,8 @@ export default {
   text-align: center;
   padding: 20px 0px;
 }
-.item{
+
+.item {
   text-align: left;
 }
 
