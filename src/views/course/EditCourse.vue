@@ -68,7 +68,6 @@
       </div>
 
       <div>
-
         <el-tabs lazy='true' v-model="activeName">
           <el-tab-pane label="主题详情" name="first">
             <HomeWorkDetail></HomeWorkDetail>
@@ -82,7 +81,6 @@
             <h1>bbbbbb</h1>
           </el-tab-pane>
         </el-tabs>
-
       </div>
     </div>
 
@@ -95,19 +93,21 @@
     </div>
 
     <div class="templateList" v-show="isShowHomeList">
-      <HomeWork :params=$route.params></HomeWork>
+      <HomeWorkList :params=$route.params :homeWorkList="homeWorkList"></HomeWorkList>
     </div>
   </div>
 </template>
 
 <script>
 import HomeWorkDetail from '@/views/course/HomeWorkDetail'
-import HomeWork from '@/views/course/HomeWork'
+import HomeWorkList from '@/views/course/HomeWorkList'
+import { getHomeListByCourseId } from '@/api/homeWorkFunc'
+import Vue from 'vue'
 
 export default {
   name: 'EditCourse',
   components: {
-    HomeWork,
+    HomeWorkList,
     HomeWorkDetail
   },
   data () {
@@ -115,12 +115,26 @@ export default {
       activeName: 'first',
       isShowHomeList: true,
       closeTitleList: true,
-      openTitleList: false
+      openTitleList: false,
+      homeWorkList: []
     }
   },
   mounted () {
     // 回填数据
-    console.log('开始回显数据', this.$route.params)
+    // console.log('开始回显数据', this.$route.params)
+    getHomeListByCourseId().then(res => {
+      this.homeWorkList = res
+      // 页面初始化的时候就显示作业列表的第一条数据内容
+      for (let i = 0; i < this.homeWorkList.length; i++) {
+        if (i === 0) {
+          Vue.set(this.homeWorkList[i], 'isShowLine', true)
+          console.log('当前触发时间的i', i)
+          this.$bus.$emit('showHomeWorkContent', this.homeWorkList[i])
+        } else {
+          Vue.set(this.homeWorkList[i], 'isShowLine', false)
+        }
+      }
+    })
   },
   methods: {
     handleSelect (index, indexPath) {
@@ -209,7 +223,7 @@ export default {
 .hiddenHomeWorkListTitle {
   position: absolute;
   top: 100px;
-  right: 298px;
+  right: 285px;
   cursor: pointer;
 
 }
@@ -217,7 +231,7 @@ export default {
 .openHomeWorkListTitle {
   position: absolute;
   top: 100px;
-  right: 16px;
+  right: 20px;
   cursor: pointer;
 }
 

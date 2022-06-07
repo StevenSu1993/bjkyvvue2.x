@@ -52,13 +52,14 @@ export default {
 
 .details {
   margin-left: 20px;
+  /*margin-top: 20px;*/
+  /*margin-bottom: 1px;*/
   position: relative;
   width: 110px;
   height: 166px;
   background: #F6F6F6;
   clear: both;
   /*flex: 3 1 20%;*/
-
 }
 
 /*region 文件名超出部分省略号显示 */

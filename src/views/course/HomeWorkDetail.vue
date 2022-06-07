@@ -3,20 +3,20 @@
   <div>
     <div class="head">
       <div>
-        <el-button>作业主题的名字</el-button>
-        <el-button>修改主题</el-button>
+        <span>{{ homeWorkName }}</span>
+        <el-button type="text" style="margin-left: 20px">修改主题</el-button>
       </div>
       <div>
-        <el-button>分享课程</el-button>
-        <el-button>复制主题到其他课程</el-button>
-        <el-button>发送通知</el-button>
+        <el-button type="primary" size="mini" plain>分享课程</el-button>
+        <el-button type="primary" size="mini" plain>复制主题到其他课程</el-button>
+        <el-button type="primary" size="mini" plain style="margin-right: 20px">发送通知</el-button>
       </div>
     </div>
 
     <div :class="workContent">
 
-      <div style="height: 300px;background: coral">
-
+      <div ref="homeWorkDetail">
+        作业的详细信息
       </div>
       <div class="openDetail" v-show="showButton">
         <el-button type="primary" @click="changCssStyle"> 展开主题</el-button>
@@ -51,16 +51,34 @@
       </div>
 
     </div>
+
+    <CommentComponent v-for="item in commentList"
+                     :key="item.id"
+                     :commentId="item.id"
+                     :userName=item.userName
+                     :txtContent=item.textContent
+                     :avatarUrl=item.avatarUrl
+                     :createTime=timeFormat(item.createTime)
+                     :finishedCount=commentList.length
+                     :voiceMsgUrl=item.path
+    >
+    </CommentComponent>
   </div>
 
 </template>
 
 <script>
+import CommentComponent from '@/views/course/CommentComponent'
+import { getCommentListPage, formatDate, byteToUrl } from '@/api/homeWorkFunc'
+
 export default {
   name: 'HomeWorkDetail',
+  components: { CommentComponent },
   data () {
     return {
       showButton: true,
+      homeWork: {},
+      homeWorkName: '',
       workContent: 'workContent',
       inputName: '',
       orderValue: '0',
@@ -85,10 +103,21 @@ export default {
             label: '可控'
           }]
         }]
-      }]
+      }],
+      commentList: []
     }
   },
   methods: {
+    getCommentPage (homeWork) {
+      var params = {}
+      params.size = 10
+      params.start = 0
+      params.homeWorkId = homeWork.id
+      getCommentListPage(params).then(res => {
+        this.commentList = res
+        console.log(res)
+      })
+    },
     changCssStyle () {
       this.workContent = 'workContentOrigin'
       this.showButton = false
@@ -96,22 +125,54 @@ export default {
     searchByLike () {
     },
     handleChange () {
+    },
+    timeFormat (val) {
+      return formatDate(val)
+    },
+    myByteToUrl (bytes) {
+      console.log('开始吧数据转成成url')
+      var url = byteToUrl(bytes)
+      console.log('url', url)
+      return url
     }
-  }
+  },
+  mounted () {
+    this.$bus.$on('showHomeWorkContent', homeWork => {
+      // this.$refs.homeWorkDetail.innerHTML = value.content
+      this.homeWorkName = homeWork.name
 
+      if (this.$refs.homeWorkDetail) {
+        this.$refs.homeWorkDetail.innerHTML = homeWork.content
+      }
+      // this.$refs.homeWorkDetail.innerHTML = homeWork.content
+      this.homeWork = homeWork
+      this.getCommentPage(this.homeWork)
+    })
+    this.$bus.$on('openThemeButton', homeWork => {
+      this.homeWorkName = homeWork.name
+      this.workContent = 'workContent'
+      this.showButton = true
+    })
+  },
+  beforeDestroy () {
+    this.$bus.$off('showHomeWorkContent')
+    this.$bus.$off('openThemeButton')
+  }
 }
 </script>
 
 <style scoped>
 
 .head {
-  margin: auto;
+  /*margin: auto;*/
+  margin-left: 25px;
   display: flex;
   justify-content: space-between;
 }
 
 .workContent {
-  background: pink;
+  background: white;
+  /*background: red;*/
   border: 1px solid #e4e8f0;
   margin: 0 25px 15px;
   overflow-y: hidden;
@@ -121,7 +182,8 @@ export default {
 }
 
 .workContentOrigin {
-  background: pink;
+  /*background: #eff1f7;*/
+  background: white;
   border: 1px solid #e4e8f0;
   margin: 0 25px 15px;
   min-height: 200px;

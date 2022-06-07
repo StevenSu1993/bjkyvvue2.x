@@ -16,19 +16,11 @@
       </div>
     </div>
 
-    <div class="drawLine" @click="clickHomeWorkItem">
-      <div class="homeWorkItem" ref="item">
-        <div class="homeWokrName">{{ }} 作业名字001</div>
-        <div class="homeWorkStatus">
-          <span>作业起止时间</span>
-          <span>状态</span>
-        </div>
+    <div class="drawLine" v-for="(item, index) in $props.homeWorkList" :key="index" @click="clickHomeWorkItem(item)">
+      <div class="line" v-if="item.isShowLine">
       </div>
-    </div>
-
-    <div class="drawLine" @click="clickHomeWorkItem">
-      <div class="homeWorkItem" ref="item">
-        <div class="homeWokrName">{{}} 作业名字002</div>
+      <div class="homeWorkItem" ref="homeWorkCSSStyle">
+        <div class="homeWokrName">{{ item.name }}</div>
         <div class="homeWorkStatus">
           <span>作业起止时间</span>
           <span>状态</span>
@@ -40,9 +32,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
-  name: 'HomeWork',
-  props: ['params'],
+  name: 'HomeWorkList',
+  props: ['params', 'homeWorkList'],
   data () {
     return {}
   },
@@ -55,17 +49,31 @@ export default {
         }
       })
     },
-    clickHomeWorkItem (event) {
-      console.log(this.$refs.item)
-      this.$refs.item.forEach(i => {
-        i.classList.remove('skate')
+    clickHomeWorkItem (item) {
+      // 显示代表选中的蓝线
+      this.homeWorkList.forEach(i => {
+        Vue.set(i, 'isShowLine', false)
       })
-      event.target.classList.add('skate')
+      Vue.set(item, 'isShowLine', true)
+      // 回填数据
+      this.$bus.$emit('showHomeWorkContent', item)
+      this.$bus.$emit('openThemeButton', item)
+      // 这种方式有问题，因为事件是监听在父组件上的，所有点击了子组件也会添加css 样式
+      // event.stopPropagation()
+      // // console.log(this.$refs.homeWorkCSSStyle.length)
+      // this.$refs.homeWorkCSSStyle.forEach(i => {
+      //   console.log(i.classList)
+      //   i.classList.remove('skate')
+      // })
+      // event.target.classList.add('skate')
     }
+  },
+  created () {
+
   },
   mounted () {
     // 去后端获取数据
-    console.log('父组件传递过来的', this.params)
+    // console.log('父组件传递过来的', this.params)
   }
 }
 </script>
@@ -106,7 +114,7 @@ export default {
   padding: 8px 16px;
 }
 
-/*.homeWorkItem::before {*/
+/*.skate::before {*/
 /*  content: '';*/
 /*  position: absolute; !*定位背景横线的位置*!*/
 /*  top: 0;*/
@@ -114,11 +122,9 @@ export default {
 /*  background: #6497fd;*/
 /*  width: 5px; !*宽和高做出来的背景横线*!*/
 /*  height: 100%;*/
-/*  !*display: none;*!*/
-/*  !*display: inline-block;*!*/
 /*}*/
 
-.skate::before {
+.line {
   content: '';
   position: absolute; /*定位背景横线的位置*/
   top: 0;
@@ -126,8 +132,6 @@ export default {
   background: #6497fd;
   width: 5px; /*宽和高做出来的背景横线*/
   height: 100%;
-  /*display: none;*/
-  /*display: inline-block;*/
 }
 
 .drawLine {

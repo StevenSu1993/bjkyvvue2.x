@@ -75,6 +75,9 @@ export default {
     this.$bus.$on('toggle', value => {
       this.collapsed = !value
     })
+  },
+  beforeDestroy () {
+    this.$bus.$off('toggle')
   }
 }
 </script>

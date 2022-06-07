@@ -3,6 +3,7 @@ import Config from '@/settings'
 import { getToken } from '@/utils/auth'
 import { AlertMenu } from '@/wangEditor/customMenu'
 import request from '@/utils/request'
+import Recorder from 'js-audio-recorder'
 
 const upLoadVideoUrl = '/api/auth/wangEditorupVideo'
 const upLoadImgUrl = '/api/auth/wangEditorupImage'
@@ -28,10 +29,10 @@ function UploadAudio (file, upLoadUrl) {
 export const BASE_URL = 'localhost:8090'
 
 export function getWangEdit () {
-  var dom = document.getElementById('editor-container')
-  var menuKey = 'alertMenuKey'
+  const dom = document.getElementById('editor-container')
+  const menuKey = 'alertMenuKey'
   // eslint-disable-next-line new-cap
-  var editor = new wangEditor(dom)
+  const editor = new wangEditor(dom)
   editor.config.height = Config.wangEditorHeight1
 
   editor.config.uploadVideoAccept = ['mp4', 'mp3']
@@ -74,4 +75,35 @@ export function getWangEdit () {
   editor.config.menus.push(menuKey)
   editor.create()
   return editor
+}
+
+export function getRecorder () {
+  window.recorder = new Recorder()
+  return window.recorder
+}
+
+export function startRecorder () {
+  window.recorder.start().then(() => {
+    // 开始录音
+    console.log('开始录音了=========')
+  },
+  (error) => {
+    // 出错了
+    console.log(error)
+  }
+  )
+}
+
+export function pauseRecorder () {
+  window.recorder.pause() // 暂停录音
+}
+export function resumeRecorder () {
+  window.recorder.resume() // 恢复录音
+}
+export function stopRecorder () {
+  window.recorder.stop() // 停止录音
+}
+
+export function playRecorder () {
+  window.recorder.play() // 停止录音
 }

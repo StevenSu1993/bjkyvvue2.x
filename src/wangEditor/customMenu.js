@@ -3,6 +3,8 @@ import E from 'wangeditor'
 import request from '@/utils/request'
 import { Message } from 'element-ui'
 import Config from '../settings'
+// import Vue from 'vue'
+// import MyAudio from '@/components/MyAudio'
 
 const icon = require('@/assets/images/yinpin.png')
 const upAdioUrl = 'http://localhost:8090/auth/uploadFile'
@@ -55,6 +57,13 @@ class AlertMenu extends BtnMenu {
         // var src = Config.baseUrl + res.data.data
         editor.enable()// 上传完毕，允许编辑器使用，这一行必须在插入html上面，否则，插入html失效，毕竟，编辑器被禁用了。
         const html = `<br><audio src="${Config.baseUrl}/${res.data}"  fileid="${e.id}" controls></audio><br/>`
+        // 这种方式只能是用html 不能把其中的js 代码设置进去没啥用
+        // const myAudioCtor = Vue.extend(MyAudio)
+        // // eslint-disable-next-line new-cap
+        // const my = new myAudioCtor()
+        // my.$props.fileurl = Config.baseUrl + '/' + res.data
+        // editor.cmd.do('insertHTML', my.$mount().$el.innerHTML)
+        // const html = `<br><my-audio src="${Config.baseUrl}/${res.data}"></my-audio><br/>`
         editor.cmd.do('insertHTML', html)
         Message.success('插入成功')
       })

@@ -1,11 +1,18 @@
 <template>
 
   <div class="dialogContent">
-    <el-button @click="showImg">图片</el-button>
-    <el-button @click="showVideo">视频</el-button>
-    <el-button @click="showAudio">音频</el-button>
+    <el-upload
+        class="upload-demo"
+        :action="upFileUrl"
+        :show-file-list="false"
+        :auto-upload=false
+        accept=".mp4"
+        :on-change="uploadchange"
+        multiple>
+      <el-button size="mini" type="primary" style="margin-top: 20px">上传本地音频</el-button>
+    </el-upload>
     <!--          <Detail></Detail>-->
-    <div class="head" v-if="isShowImg || isShowAudio || isShowVideo">
+    <div class="head">
       <el-button-group style="margin-left: 30px">
         <el-button type="primary" size="mini" plain @click="changRangBySelf">仅自己</el-button>
         <el-button type="primary" size="mini" plain @click="changRangByAll">全部</el-button>
@@ -20,20 +27,7 @@
                 style="width:160px;;margin-left: 20px"></el-input>
       <el-button type="primary" size="mini" icon="el-icon-search" @click="searchByLike">搜索</el-button>
     </div>
-    <div class="details" v-if="isShowImg">
-      <ImgDetail ref="Detail" :addChildId="addChildId"
-                 :removeChildId="removeChildId"
-                 v-for="item in fileData" :key="item.id"
-                 :fileId="item.id"
-                 :src='"api/" + item.uuidFileName'
-                 :url="item.url"
-                 :fileName="item.fileName"
-      ></ImgDetail>
-
-      <Pagination class="pagination" v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
-      <el-button class="confirm" type="primary" icon="el-icon-check" @click="insertToHTML">插入正文</el-button>
-    </div>
-    <div class="details" v-if="isShowVideo">
+    <div class="details">
       <VideoDetail ref="Detail" :addChildId="addChildId"
                    :removeChildId="removeChildId"
                    v-for="item in fileData" :key="item.id"
@@ -41,20 +35,8 @@
                    :src='"api/" + item.uuidFileName'
                    :url="item.url"
                    :fileName="item.fileName"
+                   style="margin-bottom: 20px;"
       ></VideoDetail>
-
-      <Pagination class="pagination" v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
-      <el-button class="confirm" type="primary" icon="el-icon-check" @click="insertToHTML">插入正文</el-button>
-    </div>
-    <div class="details" v-if="isShowAudio">
-      <AudioDetail ref="Detail" :addChildId="addChildId"
-                   :removeChildId="removeChildId"
-                   v-for="item in fileData" :key="item.id"
-                   :fileId="item.id"
-                   :src='"api/" + item.uuidFileName'
-                   :url="item.url"
-                   :fileName="item.fileName"
-      ></AudioDetail>
 
       <Pagination class="pagination" v-bind:child-msg="pageparm" @callFather="callFather"></Pagination>
       <el-button class="confirm" type="primary" icon="el-icon-check" @click="insertToHTML">插入正文</el-button>
@@ -63,19 +45,15 @@
 </template>
 
 <script>
-import AudioDetail from '@/views/materialCenter/items/AudioDetail'
-import ImgDetail from '@/views/materialCenter/items/ImgDetail'
 import Pagination from '@/components/Pagination'
 import VideoDetail from '@/views/materialCenter/items/VideoDetail'
 
 export default {
   name: 'MaterialListDialog',
-  props: ['isShow'],
+  props: ['isShow', 'add', 'urlAdd'],
   components: {
-    ImgDetail,
     Pagination,
-    VideoDetail,
-    AudioDetail
+    VideoDetail
   },
   computed: {
     deFaultQueryData: {
@@ -105,10 +83,8 @@ export default {
   data () {
     return {
       // showDialog: true,
+      upFileUrl: 'http://localhost:8090/auth/uploadFile',
       getAllFileUrl: 'api/auth/getAllFileByType',
-      isShowImg: false,
-      isShowAudio: false,
-      isShowVideo: false,
       pageparm: {
         currentPage: 0,
         pageSize: 10,
@@ -125,44 +101,17 @@ export default {
   },
   mounted () {
     // this.showDialog = this.$props.isShow
+    this.showVideo()
   },
   methods: {
-    handleDialogClose () {
-      // this.showDialog = false
-      this.isShowVideo = false
-      this.isShowImg = false
-      this.isShowAudio = false
-    },
-    showImg () {
-      this.materialName = ''
-      this.isShowVideo = false
-      this.isShowAudio = false
-      this.isShowImg = true
-      this.type = 1
-      // // 发送请求去获取后台数据
-      const params = { ...this.deFaultQueryData }
-      params.type = 1
-      // // 页面以初始化的情况下就按照时间进行排序
-      this.initData(params)
+    uploadchange (file, fileList) {
+      this.add(file)
     },
     showVideo () {
       this.materialName = ''
-      this.isShowAudio = false
-      this.isShowImg = false
-      this.isShowVideo = true
       this.type = 3
       const params = { ...this.deFaultQueryData }
       params.type = 3
-      this.initData(params)
-    },
-    showAudio () {
-      this.materialName = ''
-      this.isShowVideo = false
-      this.isShowImg = false
-      this.isShowAudio = true
-      this.type = 5
-      const params = { ...this.deFaultQueryData }
-      params.type = 5
       this.initData(params)
     },
 
@@ -211,37 +160,22 @@ export default {
     },
 
     insertToHTML () {
-      let html = ''
-      if (this.isShowImg) {
-        this.filesUrlList.forEach((item) => {
-          html = `<br><img src="${item}" style="max-width:100%;" contenteditable="false" alt=""></br>`
-          window.editor.cmd.do('insertHTML', html)
-        })
-      } else if (this.isShowVideo) {
-        this.filesUrlList.forEach((item) => {
-          html = `<br><video src="${item}" controls="controls" style="max-width:100%"></video></br>`
-          window.editor.cmd.do('insertHTML', html)
-        })
-      } else {
-        this.filesUrlList.forEach((item) => {
-          html = `<br><audio src="${item}"  controls></audio><br/>`
-          window.editor.cmd.do('insertHTML', html)
-        })
-      }
-      this.$emit('closeDialogByFather', false)
-      // 取消掉所有选中的
+      this.urlAdd(this.filesUrlList)
+      // 把filesUrlList 置null 是防止重复添加
+      this.filesUrlList = []
+      // 把选中元素的全部取消掉
       this.$refs.Detail.forEach(item => {
         item.$emit('canceCheck')
       })
-      this.filesUrlList = []
-      this.filesIdList = []
-      // this.editor.cmd.do('insertHTML', html)
     }
   }
 }
 </script>
 
 <style scoped>
+.upload-demo {
+  display: inline-block;
+}
 
 .dialogContent {
   height: 500px;
@@ -262,7 +196,7 @@ export default {
 
 .pagination {
   position: absolute;
-  bottom: 3rem;
+  bottom: 2rem;
   left: 0;
   right: 0;
   margin: 0 auto;

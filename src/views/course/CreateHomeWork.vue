@@ -42,11 +42,31 @@
       </div>
       <div class="templatedetail">
         <el-form ref="form" :model="form" :rules="rules">
-          <el-form-item style="margin-bottom: 0" label="模板名称：" prop="name">
-            <!--            <span style="font-size: 14px"> 模板名称：</span>-->
+          <el-form-item style="margin-bottom: 0" label="作业名称：" prop="name"/>
+          <el-form-item label="" prop="name" style="width: 300px">
+            <el-input v-model="form.name" size="mini"></el-input>
           </el-form-item>
-          <el-form-item label="" prop="name">
-            <el-input v-model="form.name" size="small"></el-input>
+
+          <el-form-item style="margin-bottom: 0;padding: 0" label="学员提交作业起止时间："/>
+          <el-form-item label="" prop="startTime" style="width: 300px">
+            <div class="stopAndStartTime">
+              <el-date-picker class="formTime"
+                              size="mini"
+                              v-model="form.startTime"
+                              type="datetime"
+                              placeholder="开始时间"
+                              default-time="08:00:00">
+              </el-date-picker>
+
+              <span>-</span>
+              <el-date-picker class="formTime"
+                              size="mini"
+                              v-model="form.stopTime"
+                              type="datetime"
+                              placeholder="结束时间"
+                              default-time="08:00:00">
+              </el-date-picker>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -58,6 +78,7 @@
 <script>
 
 import { getWangEdit } from '@/api/comment'
+import { createHomeWork } from '@/api/homeWorkFunc'
 import MaterialListDialog from '@/components/MaterialListDialog'
 
 export default {
@@ -65,9 +86,19 @@ export default {
   components: {
     MaterialListDialog
   },
+  computed: {
+    templateData: {
+      get () {
+        var params = { ...this.form }
+        params.courseId = this.$route.params.params.id
+        params.content = this.editor.txt.html()
+        return params
+      }
+    }
+  },
   data () {
     return {
-      queryUrl: '/api/auth/updateTemplate',
+      queryUrl: '/api/auth/createHomeWork',
       isShowDialog: false,
       form: {
         name: ''
@@ -89,6 +120,8 @@ export default {
       },
       rang: '',
       type: 1
+      // startTime: '',
+      // stopTime: ''
     }
   },
   methods: {
@@ -110,7 +143,6 @@ export default {
     useTemplateMaterial () {
       this.isShowDialog = true
     },
-
     clearContent () {
       this.editor.txt.clear()
     },
@@ -118,11 +150,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 提交数据给后台
-          console.log(this.templateData)
-          this.$request.post(this.queryUrl, this.templateData).then(res => {
-            console.log(res)
-            this.$message.success('更新模板成功')
-          })
+          createHomeWork(this.templateData)
         } else {
           this.$message.error('请输入模板名称')
           return false
@@ -139,7 +167,7 @@ export default {
     this.editor = editor
 
     // 回填数据
-    console.log('开始回显数据', this.$route.params)
+    // console.log('开始回显数据', this.$route.params)
   }
 }
 </script>
@@ -150,7 +178,6 @@ export default {
   margin-left: 20px;
   display: inline-block;
   /*border: green solid 1px;*/
-  /*height: 500px;*/
   width: 80%;
 }
 
@@ -178,46 +205,8 @@ export default {
 
 .templatedetail {
   margin-left: 20px;
-}
-
-.dialogContent {
-  height: 500px;
-}
-
-.confirm {
-  position: absolute;
-  bottom: 0.1rem;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  display: inline-block;
-  /*background: lawngreen;*/
-
-  height: 40px;
-  width: 120px;
-}
-
-.pagination {
-  position: absolute;
-  bottom: 3rem;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  display: inline-block;
-  text-align: center;
-}
-
-.head {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  float: right;
-}
-
-.details {
-  clear: both;
-  display: flex;
-  flex-flow: wrap;
-  /*justify-content: space-between;*/
+  max-width: 20%;
+  width: 20%;
 }
 
 .headDiv {
@@ -256,5 +245,10 @@ export default {
   display: inline;
   line-height: 55px;
   margin: 0px 10px 0px 0px;
+}
+
+.stopAndStartTime {
+  display: flex;
+  align-items: center;
 }
 </style>

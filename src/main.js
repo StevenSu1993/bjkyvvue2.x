@@ -15,6 +15,10 @@ import store from './store/index'
 // 引入icon
 import './assets/icon/iconfont.css'
 
+// import MyAudio from '@/components/MyAudio'
+import MyAudio from '@/components/MyAudioNoVolume'
+import myVedio from '@/components/simpleVedio'
+
 import request from './utils/request'
 
 import Echarts from 'vue-echarts'
@@ -22,6 +26,8 @@ import 'echarts/lib/chart/line'
 Vue.component('v-chart', Echarts)
 // 引入状态管理
 Vue.use(ElementUI)
+Vue.component('my-audio', MyAudio)
+Vue.component('my-vedio', myVedio)
 Vue.config.productionTip = false
 Vue.prototype.$request = request // 显式的绑定
 

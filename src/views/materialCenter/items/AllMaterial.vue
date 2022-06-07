@@ -268,7 +268,6 @@ export default {
       this.createFolder = true
     },
     // #endregion
-
     // #region  移动文件到文件夹中
     handleNodeClick (data) {
       // 清空原有的数组
@@ -299,7 +298,6 @@ export default {
       })
     },
     // #endregion
-
     // 上传文件
     onSuccess () {
       this.$message({
@@ -308,7 +306,6 @@ export default {
       })
       this.search()
     },
-
     // 取消全部选择
     cancelAllChecked () {
       this.fileIds = []
@@ -317,7 +314,6 @@ export default {
         item.$emit('canceCheck')
       })
     },
-
     // 模糊搜索
     changRangBySelf () {
       this.rang = 1

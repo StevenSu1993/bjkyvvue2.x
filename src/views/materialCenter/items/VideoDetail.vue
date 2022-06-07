@@ -1,25 +1,5 @@
 <template>
   <div>
-
-    <div class="childDialog">
-      <el-dialog
-          class="dialog"
-          :visible.sync="dialogVisible"
-          :before-close="handleClose"
-          width='680px'
-          heigth="400px"
-          append-to-body
-          top="15vh">
-        <video
-            class="v2"
-            :src="src"
-            controls
-            controlsList='nodownload noremote footbar'
-            :autoplay="true"
-        />
-      </el-dialog>
-    </div>
-
     <div class="details">
       <input ref="checkTest"
              type="checkbox"
@@ -28,18 +8,7 @@
              :value="fileId"
              @change="onchecked"/>
 
-      <div class="vcontent">
-        <!-- poster="1.jpeg" 自定义封面-->
-        <video
-            class="v1"
-            style="width: 110px;height: 110px"
-            ref="v1"
-            @click.prevent="showDialog"
-            :src="src"
-            :autoplay="false"
-        />
-        <span class="playButton" @click.prevent="showDialog"><i class="el-icon-video-play "></i></span>
-      </div>
+      <my-vedio :fileurl="src"></my-vedio>
       <span class="fNclass">{{ fileName }}</span>
 
     </div>
@@ -82,61 +51,7 @@ export default {
 
 <style scoped>
 
-.dialog {
-  z-index: 999;
-
-}
-
-/*.vcontent {*/
-/*  clear: both;*/
-/*  position: relative;*/
-/*  text-align: center;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  align-items: Center;*/
-/*}*/
-
-/*.playButton {*/
-/*  font-size: 40px;*/
-/*  display: block;*/
-/*  color: #65c9f4;*/
-/*  position: absolute;*/
-
-/*}*/
-.vcontent {
-  clear: both;
-  position: relative;
-}
-
-.playButton {
-  height: 40px;
-  width: 40px;
-  font-size: 40px;
-  display: block;
-  color: #65c9f4;
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-}
-
-::v-deep .el-dialog .el-dialog__body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.v2 {
-  height: 450px;
-  width: 450px;
-  /*margin-left: 116px;*/
-}
-
 /*region  内容样式布局 */
-
 .details {
   margin-left: 20px;
   position: relative;

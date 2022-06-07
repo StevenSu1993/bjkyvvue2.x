@@ -7,11 +7,12 @@ import store from '../store/index'
 import ShowStudentInfo from '../views/systemStudents/ShowStudentInfo'
 import request from '@/utils/request'
 import allRoutes from '@/router/allRoute'
-import wangEditorTest from '@/views/materialCenter/wangEditorTest'
 import EditTemplateMaterial from '@/views/materialCenter/EditTemplateMaterial'
 import CreateHomeWork from '@/views/course/CreateHomeWork'
 import EditCourse from '@/views/course/EditCourse'
 import CreateCourse from '@/views/course/CreateCourse'
+import CommentComponent from '@/views/course/CommentComponent'
+import CommentForm from '@/views/course/component/CommentForm'
 
 Vue.use(Router)
 
@@ -38,11 +39,6 @@ const routes = [
         component: ShowStudentInfo
       },
       {
-        path: '/wangEditor',
-        name: 'wangEditor',
-        component: wangEditorTest
-      },
-      {
         path: '/createCourse',
         name: 'createCourse',
         component: CreateCourse
@@ -66,8 +62,19 @@ const routes = [
     path: '/createHomeWork',
     name: 'createHomeWork',
     component: CreateHomeWork
-  }
+  },
+  // 后续要删除掉的
+  {
+    path: '/CommentComponent',
+    name: 'CommentComponent',
+    component: CommentComponent
+  },
 
+  {
+    path: '/testCommentForm',
+    name: 'testCommentForm',
+    component: CommentForm
+  }
 ]
 
 const router = new Router({
